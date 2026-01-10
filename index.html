@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Propuesta Estratégica Óptica Leonesa 2026</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -15,18 +15,84 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
         }
         #root {
             width: 100%;
             height: 100%;
         }
+        
+        /* Botones de navegación optimizados para móviles */
+        .nav-button {
+            position: relative;
+            touch-action: manipulation;
+            user-select: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Indicadores de diapositivas más visibles */
+        .slide-indicator {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Mejor scroll en móviles */
+        .mobile-scroll {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Contenedor de diapositivas optimizado */
+        .slide-container {
+            overscroll-behavior: contain;
+        }
+        
         @media (max-width: 768px) {
-            .mobile-text-lg { font-size: 1.125rem !important; }
-            .mobile-text-xl { font-size: 1.25rem !important; }
-            .mobile-text-2xl { font-size: 1.5rem !important; }
-            .mobile-text-3xl { font-size: 1.875rem !important; }
-            .mobile-text-4xl { font-size: 2.25rem !important; }
-            .mobile-p-4 { padding: 1rem !important; }
+            /* Asegurar que el contenido sea legible en móviles */
+            .mobile-text-large {
+                font-size: clamp(1.5rem, 4vw, 3rem);
+                line-height: 1.3;
+            }
+            
+            .mobile-text-medium {
+                font-size: clamp(1rem, 3vw, 1.75rem);
+                line-height: 1.4;
+            }
+            
+            .mobile-text-small {
+                font-size: clamp(0.875rem, 2.5vw, 1.25rem);
+                line-height: 1.4;
+            }
+            
+            .mobile-padding {
+                padding: clamp(1rem, 3vw, 2rem);
+            }
+            
+            /* Botones más grandes en móviles */
+            .mobile-nav-button {
+                min-width: 60px;
+                min-height: 60px;
+            }
+            
+            /* Contenedores más compactos en móviles */
+            .mobile-stack > * + * {
+                margin-top: 1rem;
+            }
+            
+            .mobile-grid-gap {
+                gap: 1rem;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            /* Optimización para tablets */
+            .tablet-text-large {
+                font-size: clamp(2rem, 5vw, 4rem);
+            }
         }
     </style>
 </head>
@@ -34,17 +100,18 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect, useRef } = React;
 
+        // Componentes de iconos optimizados
         const ChevronLeft = (props) => (
             <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
             </svg>
         );
 
         const ChevronRight = (props) => (
             <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
             </svg>
         );
 
@@ -129,22 +196,71 @@
 
         const OpticaPresentation = () => {
           const [currentSlide, setCurrentSlide] = useState(0);
+          const containerRef = useRef(null);
+          const [isMobile, setIsMobile] = useState(false);
+
+          // Detectar si es móvil
+          useEffect(() => {
+            const checkMobile = () => {
+              setIsMobile(window.innerWidth <= 768);
+            };
+            
+            checkMobile();
+            window.addEventListener('resize', checkMobile);
+            
+            return () => window.removeEventListener('resize', checkMobile);
+          }, []);
+
+          // Detectar gestos táctiles
+          useEffect(() => {
+            const container = containerRef.current;
+            if (!container) return;
+
+            let startX = 0;
+            let endX = 0;
+            const minSwipeDistance = 50;
+
+            const handleTouchStart = (e) => {
+              startX = e.touches[0].clientX;
+            };
+
+            const handleTouchEnd = (e) => {
+              endX = e.changedTouches[0].clientX;
+              const distance = startX - endX;
+
+              if (Math.abs(distance) > minSwipeDistance) {
+                if (distance > 0) {
+                  nextSlide(); // Swipe izquierda -> siguiente
+                } else {
+                  prevSlide(); // Swipe derecha -> anterior
+                }
+              }
+            };
+
+            container.addEventListener('touchstart', handleTouchStart, { passive: true });
+            container.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+            return () => {
+              container.removeEventListener('touchstart', handleTouchStart);
+              container.removeEventListener('touchend', handleTouchEnd);
+            };
+          }, []);
 
           const slides = [
             {
               id: 1,
               component: () => (
-                <div className="relative w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center overflow-hidden p-4 md:p-8">
+                <div className="relative w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center overflow-hidden p-4 md:p-8 slide-container" ref={containerRef}>
                   <div className="absolute inset-0 bg-black opacity-30"></div>
-                  <div className="relative z-10 text-center px-6 max-w-5xl">
-                    <Eye className="w-16 h-16 md:w-24 md:h-24 mx-auto text-white mb-4 md:mb-6 animate-pulse" />
-                    <h1 className="text-2xl md:text-5xl lg:text-7xl font-bold text-white mb-4 md:mb-6 drop-shadow-2xl">
+                  <div className="relative z-10 text-center px-4 md:px-6 max-w-5xl">
+                    <Eye className="w-20 h-20 md:w-24 md:h-24 mx-auto text-white mb-6 animate-pulse" />
+                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-6 drop-shadow-2xl">
                       PROPUESTA ESTRATÉGICA DE DOMINIO DIGITAL 2026
                     </h1>
-                    <h2 className="text-lg md:text-2xl lg:text-4xl text-white mb-6 md:mb-8 font-light">
+                    <h2 className="mobile-text-medium text-white mb-6 md:mb-8 font-light">
                       Óptica Leonesa: El Renacimiento de una Tradición de 25 Años
                     </h2>
-                    <p className="text-base md:text-xl text-white/90">
+                    <p className="mobile-text-small text-white/90">
                       Presentado por: José Manuel Testela
                     </p>
                   </div>
@@ -154,28 +270,28 @@
             {
               id: 2,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4 md:p-8 lg:p-12 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-5xl w-full">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-4 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-4 text-center">
                       La Realidad Actual: Oportunidad Invisible
                     </h1>
-                    <p className="text-base md:text-xl text-gray-400 text-center mb-8 md:mb-12">Puntos Críticos Identificados</p>
-                    <div className="grid gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-12">
+                    <p className="mobile-text-small text-gray-400 text-center mb-8 md:mb-12">Puntos Críticos Identificados</p>
+                    <div className="grid gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-12 mobile-grid-gap">
                       <div className="bg-red-900/30 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
-                        <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Activos Digitales Desperdiciados</h3>
-                        <p className="text-gray-300 text-base md:text-lg">Google Maps sin control, sin presencia digital oficial</p>
+                        <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Activos Digitales Desperdiciados</h3>
+                        <p className="text-gray-300 mobile-text-small">Google Maps sin control, sin presencia digital oficial</p>
                       </div>
                       <div className="bg-red-900/30 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
-                        <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Conexión Perdida</h3>
-                        <p className="text-gray-300 text-base md:text-lg">Desconexión con público joven, trabajadores y ejecutivos</p>
+                        <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Conexión Perdida</h3>
+                        <p className="text-gray-300 mobile-text-small">Desconexión con público joven, trabajadores y ejecutivos</p>
                       </div>
                       <div className="bg-red-900/30 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
-                        <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Visibilidad Cero</h3>
-                        <p className="text-gray-300 text-base md:text-lg">25 años de prestigio invisible para quien busca en internet</p>
+                        <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Visibilidad Cero</h3>
+                        <p className="text-gray-300 mobile-text-small">25 años de prestigio invisible para quien busca en internet</p>
                       </div>
                     </div>
                     <div className="bg-amber-500/20 border border-amber-500 p-4 md:p-6 rounded-lg text-center backdrop-blur">
-                      <p className="text-lg md:text-2xl text-amber-300 font-semibold">
+                      <p className="mobile-text-medium text-amber-300 font-semibold">
                         "Un legado de 25 años merece una vitrina digital que lo multiplique"
                       </p>
                     </div>
@@ -186,68 +302,68 @@
             {
               id: 3,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-blue-900 to-blue-700 flex flex-col items-center justify-start p-4 md:p-8 lg:p-12 overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-blue-900 to-blue-700 flex flex-col items-center justify-start p-4 md:p-8 lg:p-12 overflow-hidden slide-container" ref={containerRef}>
                   <div className="w-full max-w-6xl flex-shrink-0">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-4 md:mb-6 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-6 text-center">
                       Ecosistema Digital Óptica Leonesa
                     </h1>
                   </div>
                   
-                  <div className="flex-1 w-full flex items-center justify-center max-w-4xl mx-auto">
-                    <div className="relative w-full" style={{aspectRatio: '1/1', maxHeight: '60vh'}}>
+                  <div className="flex-1 w-full flex items-center justify-center max-w-4xl mx-auto px-2">
+                    <div className="relative w-full" style={{aspectRatio: '1/1', maxHeight: isMobile ? '50vh' : '70vh'}}>
                       <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{zIndex: 10}}>
-                        <line x1="50" y1="50" x2="15" y2="12" stroke="white" strokeWidth="0.3" strokeOpacity="0.5" strokeDasharray="2,1">
+                        <line x1="50" y1="50" x2="15" y2="12" stroke="white" strokeWidth={isMobile ? "0.5" : "0.3"} strokeOpacity="0.5" strokeDasharray="2,1">
                           <animate attributeName="stroke-dashoffset" from="0" to="3" dur="1s" repeatCount="indefinite" />
                         </line>
-                        <line x1="50" y1="50" x2="85" y2="12" stroke="white" strokeWidth="0.3" strokeOpacity="0.5" strokeDasharray="2,1">
+                        <line x1="50" y1="50" x2="85" y2="12" stroke="white" strokeWidth={isMobile ? "0.5" : "0.3"} strokeOpacity="0.5" strokeDasharray="2,1">
                           <animate attributeName="stroke-dashoffset" from="0" to="3" dur="1s" repeatCount="indefinite" />
                         </line>
-                        <line x1="50" y1="50" x2="15" y2="88" stroke="white" strokeWidth="0.3" strokeOpacity="0.5" strokeDasharray="2,1">
+                        <line x1="50" y1="50" x2="15" y2="88" stroke="white" strokeWidth={isMobile ? "0.5" : "0.3"} strokeOpacity="0.5" strokeDasharray="2,1">
                           <animate attributeName="stroke-dashoffset" from="0" to="3" dur="1s" repeatCount="indefinite" />
                         </line>
-                        <line x1="50" y1="50" x2="85" y2="88" stroke="white" strokeWidth="0.3" strokeOpacity="0.5" strokeDasharray="2,1">
+                        <line x1="50" y1="50" x2="85" y2="88" stroke="white" strokeWidth={isMobile ? "0.5" : "0.3"} strokeOpacity="0.5" strokeDasharray="2,1">
                           <animate attributeName="stroke-dashoffset" from="0" to="3" dur="1s" repeatCount="indefinite" />
                         </line>
                       </svg>
 
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-amber-500 rounded-full p-4 md:p-6 lg:p-10 shadow-2xl">
-                        <Globe className="w-8 h-8 md:w-12 md:h-12 lg:w-20 lg:h-20 text-white" />
+                        <Globe className="w-10 h-10 md:w-12 md:h-12 lg:w-20 lg:h-20 text-white" />
                         <p className="text-white font-bold text-center mt-1 md:mt-2 text-xs md:text-sm lg:text-lg whitespace-nowrap">Sitio Web</p>
                       </div>
                       
                       <div className="absolute" style={{top: '12%', left: '15%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
-                        <div className="bg-blue-600 rounded-full p-2 md:p-3 lg:p-5 shadow-xl">
-                          <Facebook className="w-4 h-4 md:w-6 md:h-6 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-blue-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
+                          <Facebook className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap text-[10px] md:text-xs">Comunidad</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Comunidad</p>
                       </div>
                       
                       <div className="absolute" style={{top: '12%', left: '85%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
-                        <div className="bg-pink-600 rounded-full p-2 md:p-3 lg:p-5 shadow-xl">
-                          <Instagram className="w-4 h-4 md:w-6 md:h-6 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-pink-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
+                          <Instagram className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap text-[10px] md:text-xs">Confianza</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Confianza</p>
                       </div>
                       
                       <div className="absolute" style={{top: '88%', left: '15%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
-                        <div className="bg-green-600 rounded-full p-2 md:p-3 lg:p-5 shadow-xl">
-                          <MapPin className="w-4 h-4 md:w-6 md:h-6 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-green-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
+                          <MapPin className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap text-[10px] md:text-xs">Visibilidad</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Visibilidad</p>
                       </div>
                       
                       <div className="absolute" style={{top: '88%', left: '85%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
-                        <div className="bg-green-500 rounded-full p-2 md:p-3 lg:p-5 shadow-xl">
-                          <MessageCircle className="w-4 h-4 md:w-6 md:h-6 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-green-500 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
+                          <MessageCircle className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap text-[10px] md:text-xs">Conversión</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Conversión</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="w-full max-w-6xl mt-4 md:mt-6 flex-shrink-0">
+                  <div className="w-full max-w-6xl mt-4 md:mt-6 flex-shrink-0 px-2">
                     <div className="bg-white/10 backdrop-blur border border-white/20 p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                      <p className="text-base md:text-xl lg:text-3xl text-white font-semibold">
+                      <p className="mobile-text-medium text-white font-semibold">
                         "No construimos redes sociales, construimos propiedad digital permanente"
                       </p>
                     </div>
@@ -258,19 +374,19 @@
             {
               id: 4,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-green-900 to-green-700 flex items-center justify-center p-4 md:p-8 lg:p-12 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-green-900 to-green-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-5xl w-full">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-4 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-4 text-center">
                       Recuperación de Territorio Digital
                     </h1>
-                    <p className="text-base md:text-xl text-green-200 text-center mb-8 md:mb-12">Fase 1 - Mes 1</p>
-                    <div className="grid gap-4 md:gap-6">
+                    <p className="mobile-text-small text-green-200 text-center mb-8 md:mb-12">Fase 1 - Mes 1</p>
+                    <div className="grid gap-4 md:gap-6 mobile-stack">
                       <div className="bg-white/10 backdrop-blur border-l-4 border-amber-500 p-4 md:p-6 lg:p-8 rounded-lg">
                         <div className="flex items-start gap-3 md:gap-4">
                           <CheckCircle className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 flex-shrink-0 mt-1" />
                           <div>
-                            <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Rescate de 4 Sucursales en Google</h3>
-                            <p className="text-green-100 text-base md:text-lg">Recuperación completa de perfiles en Maps</p>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Rescate de 4 Sucursales en Google</h3>
+                            <p className="text-green-100 mobile-text-small">Recuperación completa de perfiles en Maps</p>
                           </div>
                         </div>
                       </div>
@@ -278,8 +394,8 @@
                         <div className="flex items-start gap-3 md:gap-4">
                           <CheckCircle className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 flex-shrink-0 mt-1" />
                           <div>
-                            <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Sitio Web Oficial .mx</h3>
-                            <p className="text-green-100 text-base md:text-lg">Plataforma central con mapa interactivo y agendado</p>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Sitio Web Oficial .mx</h3>
+                            <p className="text-green-100 mobile-text-small">Plataforma central con mapa interactivo y agendado</p>
                           </div>
                         </div>
                       </div>
@@ -287,8 +403,8 @@
                         <div className="flex items-start gap-3 md:gap-4">
                           <CheckCircle className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 flex-shrink-0 mt-1" />
                           <div>
-                            <h3 className="text-xl md:text-2xl font-semibold text-white mb-2 md:mb-3">Identidad Digital Unificada</h3>
-                            <p className="text-green-100 text-base md:text-lg">Facebook e Instagram con paleta Dorado/Blanco</p>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Identidad Digital Unificada</h3>
+                            <p className="text-green-100 mobile-text-small">Facebook e Instagram con paleta Dorado/Blanco</p>
                           </div>
                         </div>
                       </div>
@@ -300,33 +416,33 @@
             {
               id: 5,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-purple-900 to-purple-700 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-purple-900 to-purple-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-5xl w-full py-4">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-4 md:mb-8 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-8 text-center">
                       El Mensaje Correcto para Cada Audiencia
                     </h1>
-                    <p className="text-lg md:text-xl lg:text-2xl text-purple-200 text-center mb-6 md:mb-12 font-semibold">Tres Pilares de Contenido</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <p className="mobile-text-medium text-purple-200 text-center mb-6 md:mb-12 font-semibold">Tres Pilares de Contenido</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mobile-grid-gap">
                       <div className="bg-white/10 backdrop-blur border border-amber-500/50 p-4 md:p-6 rounded-lg text-center">
-                        <div className="bg-amber-500 rounded-full w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
-                          <TrendingUp className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-amber-500 rounded-full w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
+                          <TrendingUp className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2 md:mb-3 lg:mb-4">Legado & Confianza</h3>
-                        <p className="text-purple-100 text-sm md:text-base lg:text-lg">Historias de 25 años, testimonios generacionales</p>
+                        <h3 className="mobile-text-medium font-bold text-white mb-2 md:mb-3 lg:mb-4">Legado & Confianza</h3>
+                        <p className="text-purple-100 mobile-text-small">Historias de 25 años, testimonios generacionales</p>
                       </div>
                       <div className="bg-white/10 backdrop-blur border border-amber-500/50 p-4 md:p-6 rounded-lg text-center">
-                        <div className="bg-amber-500 rounded-full w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
-                          <Users className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-amber-500 rounded-full w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
+                          <Users className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2 md:mb-3 lg:mb-4">Accesibilidad</h3>
-                        <p className="text-purple-100 text-sm md:text-base lg:text-lg">Paquetes para estudiantes, trabajadores turísticos, familias</p>
+                        <h3 className="mobile-text-medium font-bold text-white mb-2 md:mb-3 lg:mb-4">Accesibilidad</h3>
+                        <p className="text-purple-100 mobile-text-small">Paquetes para estudiantes, trabajadores turísticos, familias</p>
                       </div>
                       <div className="bg-white/10 backdrop-blur border border-amber-500/50 p-4 md:p-6 rounded-lg text-center">
-                        <div className="bg-amber-500 rounded-full w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
-                          <Eye className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-amber-500 rounded-full w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
+                          <Eye className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-2 md:mb-3 lg:mb-4">Tecnología</h3>
-                        <p className="text-purple-100 text-sm md:text-base lg:text-lg">Procesos de alta precisión, equipo de vanguardia</p>
+                        <h3 className="mobile-text-medium font-bold text-white mb-2 md:mb-3 lg:mb-4">Tecnología</h3>
+                        <p className="text-purple-100 mobile-text-small">Procesos de alta precisión, equipo de vanguardia</p>
                       </div>
                     </div>
                   </div>
@@ -336,17 +452,17 @@
             {
               id: 6,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-indigo-900 to-indigo-700 flex items-center justify-center p-4 md:p-8 lg:p-12 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-indigo-900 to-indigo-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-5xl w-full">
-                    <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white mb-6 md:mb-8 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-6 md:mb-8 text-center">
                       Dominio Geográfico en Puerto Vallarta
                     </h1>
-                    <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+                    <div className="grid md:grid-cols-2 gap-6 md:gap-8 mobile-grid-gap">
                       <div className="bg-white/10 backdrop-blur p-4 md:p-6 lg:p-8 rounded-lg">
                         <Target className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-amber-400 mb-4 md:mb-6" />
-                        <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Segmentación por Sucursal</h3>
-                        <p className="text-indigo-100 mb-3 md:mb-4 text-base md:text-lg">Impacto hiperlocal (5km radio)</p>
-                        <div className="space-y-2 md:space-y-3 text-indigo-100 text-sm md:text-base">
+                        <h3 className="mobile-text-medium font-bold text-white mb-3 md:mb-4">Segmentación por Sucursal</h3>
+                        <p className="text-indigo-100 mb-3 md:mb-4 mobile-text-small">Impacto hiperlocal (5km radio)</p>
+                        <div className="space-y-2 md:space-y-3 text-indigo-100 mobile-text-small">
                           <p><span className="font-bold text-amber-400">Centro:</span> Ejecutivos</p>
                           <p><span className="font-bold text-amber-400">Marina:</span> Turismo premium</p>
                           <p><span className="font-bold text-amber-400">Pitillal:</span> Familias</p>
@@ -354,8 +470,8 @@
                       </div>
                       <div className="bg-white/10 backdrop-blur p-4 md:p-6 lg:p-8 rounded-lg">
                         <div className="text-4xl md:text-5xl lg:text-6xl mb-4 md:mb-6">📱</div>
-                        <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Física + Digital</h3>
-                        <p className="text-indigo-100 text-base md:text-lg">QR en mostradores migra clientes al ecosistema digital</p>
+                        <h3 className="mobile-text-medium font-bold text-white mb-3 md:mb-4">Física + Digital</h3>
+                        <p className="text-indigo-100 mobile-text-small">QR en mostradores migra clientes al ecosistema digital</p>
                       </div>
                     </div>
                   </div>
@@ -365,35 +481,35 @@
             {
               id: 7,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-rose-900 to-rose-700 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-rose-900 to-rose-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-5xl w-full py-4">
-                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-8 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-8 text-center">
                       El Acelerador Comprobado
                     </h1>
                     <div className="bg-red-900/40 border-2 border-red-400 p-3 md:p-4 lg:p-6 rounded-lg mb-4 md:mb-6 lg:mb-8 text-center">
-                      <p className="text-base md:text-lg lg:text-xl text-red-200 font-bold">
+                      <p className="mobile-text-medium text-red-200 font-bold">
                         Sin inversión, solo 2% de seguidores ven su contenido
                       </p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6 mb-4 md:mb-6 lg:mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6 mb-4 md:mb-6 lg:mb-8 mobile-grid-gap">
                       <div className="bg-white/10 backdrop-blur p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                        <Zap className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
-                        <h3 className="text-base md:text-lg lg:text-xl font-bold text-white mb-1 md:mb-2 lg:mb-3">Alcance Garantizado</h3>
-                        <p className="text-rose-100 text-xs md:text-sm lg:text-base">Miles ven sus promociones</p>
+                        <Zap className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
+                        <h3 className="mobile-text-medium font-bold text-white mb-1 md:mb-2 lg:mb-3">Alcance Garantizado</h3>
+                        <p className="text-rose-100 mobile-text-small">Miles ven sus promociones</p>
                       </div>
                       <div className="bg-white/10 backdrop-blur p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                        <Target className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
-                        <h3 className="text-base md:text-lg lg:text-xl font-bold text-white mb-1 md:mb-2 lg:mb-3">Segmentación</h3>
-                        <p className="text-rose-100 text-xs md:text-sm lg:text-base">Solo quien busca lentes</p>
+                        <Target className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
+                        <h3 className="mobile-text-medium font-bold text-white mb-1 md:mb-2 lg:mb-3">Segmentación</h3>
+                        <p className="text-rose-100 mobile-text-small">Solo quien busca lentes</p>
                       </div>
                       <div className="bg-white/10 backdrop-blur p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                        <DollarSign className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
-                        <h3 className="text-base md:text-lg lg:text-xl font-bold text-white mb-1 md:mb-2 lg:mb-3">ROI Medible</h3>
-                        <p className="text-rose-100 text-xs md:text-sm lg:text-base">Citas agendadas</p>
+                        <DollarSign className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
+                        <h3 className="mobile-text-medium font-bold text-white mb-1 md:mb-2 lg:mb-3">ROI Medible</h3>
+                        <p className="text-rose-100 mobile-text-small">Citas agendadas</p>
                       </div>
                     </div>
-                    <div className="bg-amber-500/20 border-2 border-amber-500 p-3 md:p-4 lg:p-6 lg:p-8 rounded-lg text-center">
-                      <p className="text-lg md:text-xl lg:text-2xl text-amber-300 font-bold">
+                    <div className="bg-amber-500/20 border-2 border-amber-500 p-3 md:p-4 lg:p-8 rounded-lg text-center">
+                      <p className="mobile-text-medium text-amber-300 font-bold">
                         "Comprar una fila constante de clientes"
                       </p>
                     </div>
@@ -404,51 +520,51 @@
             {
               id: 8,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-emerald-900 to-emerald-700 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-emerald-900 to-emerald-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-6xl w-full py-4">
-                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-6 md:mb-8 lg:mb-12 text-center">
+                    <h1 className="mobile-text-large font-bold text-white mb-6 md:mb-8 lg:mb-12 text-center">
                       Inversión Clara, Resultados Tangibles
                     </h1>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-4 md:mb-6 lg:mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-4 md:mb-6 lg:mb-8 mobile-grid-gap">
                       <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
                         <div className="text-center mb-3 md:mb-4 lg:mb-6">
                           <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-600 mb-1 md:mb-2">$8,500</div>
-                          <div className="text-gray-600 text-base md:text-lg lg:text-xl">MXN</div>
+                          <div className="text-gray-600 mobile-text-small">MXN</div>
                         </div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Inicial</h3>
-                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 text-xs md:text-sm lg:text-base">
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Inicial</h3>
+                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 mobile-text-small">
                           <li className="flex gap-1 md:gap-2"><span className="text-emerald-600">✓</span><span>Rescate Maps</span></li>
                           <li className="flex gap-1 md:gap-2"><span className="text-emerald-600">✓</span><span>Web</span></li>
                           <li className="flex gap-1 md:gap-2"><span className="text-emerald-600">✓</span><span>Redes</span></li>
                         </ul>
                         <div className="mt-3 md:mt-4 lg:mt-6 text-center">
-                          <span className="bg-emerald-100 text-emerald-800 px-2 md:px-3 lg:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-semibold">ÚNICO</span>
+                          <span className="bg-emerald-100 text-emerald-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">ÚNICO</span>
                         </div>
                       </div>
                       <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
                         <div className="text-center mb-3 md:mb-4 lg:mb-6">
                           <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-amber-600 mb-1 md:mb-2">$6,500</div>
-                          <div className="text-gray-600 text-base md:text-lg lg:text-xl">MXN/mes</div>
+                          <div className="text-gray-600 mobile-text-small">MXN/mes</div>
                         </div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Gestión</h3>
-                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 text-xs md:text-sm lg:text-base">
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Gestión</h3>
+                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 mobile-text-small">
                           <li className="flex gap-1 md:gap-2"><span className="text-amber-600">✓</span><span>Contenido</span></li>
                           <li className="flex gap-1 md:gap-2"><span className="text-amber-600">✓</span><span>Optimización</span></li>
                           <li className="flex gap-1 md:gap-2"><span className="text-amber-600">✓</span><span>Reportes</span></li>
                         </ul>
                         <div className="mt-3 md:mt-4 lg:mt-6 text-center">
-                          <span className="bg-amber-100 text-amber-800 px-2 md:px-3 lg:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-semibold">MENSUAL</span>
+                          <span className="bg-amber-100 text-amber-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">MENSUAL</span>
                         </div>
                       </div>
                       <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
                         <div className="text-center mb-3 md:mb-4 lg:mb-6">
                           <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mb-1 md:mb-2">$4,000+</div>
-                          <div className="text-gray-600 text-base md:text-lg lg:text-xl">MXN/mes</div>
+                          <div className="text-gray-600 mobile-text-small">MXN/mes</div>
                         </div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Publicidad</h3>
-                        <p className="text-gray-700 mb-3 md:mb-4 lg:mb-6 text-xs md:text-sm lg:text-base">Variable según objetivos</p>
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Publicidad</h3>
+                        <p className="text-gray-700 mb-3 md:mb-4 lg:mb-6 mobile-text-small">Variable según objetivos</p>
                         <div className="mt-3 md:mt-4 lg:mt-6 text-center">
-                          <span className="bg-blue-100 text-blue-800 px-2 md:px-3 lg:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-semibold">DIRECTO</span>
+                          <span className="bg-blue-100 text-blue-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">DIRECTO</span>
                         </div>
                       </div>
                     </div>
@@ -459,50 +575,50 @@
             {
               id: 9,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
                   <div className="max-w-5xl w-full py-4">
-                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-6 md:mb-8 lg:mb-12 text-center drop-shadow-lg">
+                    <h1 className="mobile-text-large font-bold text-white mb-6 md:mb-8 lg:mb-12 text-center drop-shadow-lg">
                       Plan de Acción Inmediato
                     </h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-6 md:mb-8 lg:mb-12">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-6 md:mb-8 lg:mb-12 mobile-grid-gap">
                       <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-6 text-center">Semanas 1-2</h3>
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-3 md:mb-4 lg:mb-6 text-center">Semanas 1-2</h3>
                         <div className="space-y-2 md:space-y-3 lg:space-y-4">
                           <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex items-center justify-center flex-shrink-0 font-bold text-xs md:text-sm lg:text-base">1</div>
-                            <p className="text-gray-700 pt-1 md:pt-2 text-sm md:text-base">Firma de acuerdo</p>
+                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">1</div>
+                            <p className="text-gray-700 pt-2 mobile-text-small">Firma de acuerdo</p>
                           </div>
                           <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex items-center justify-center flex-shrink-0 font-bold text-xs md:text-sm lg:text-base">2</div>
-                            <p className="text-gray-700 pt-1 md:pt-2 text-sm md:text-base">Entrega de accesos</p>
+                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">2</div>
+                            <p className="text-gray-700 pt-2 mobile-text-small">Entrega de accesos</p>
                           </div>
                           <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex items-center justify-center flex-shrink-0 font-bold text-xs md:text-sm lg:text-base">3</div>
-                            <p className="text-gray-700 pt-1 md:pt-2 text-sm md:text-base">Sesión fotográfica</p>
+                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">3</div>
+                            <p className="text-gray-700 pt-2 mobile-text-small">Sesión fotográfica</p>
                           </div>
                         </div>
                       </div>
                       <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-6 text-center">Semanas 3-4</h3>
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-3 md:mb-4 lg:mb-6 text-center">Semanas 3-4</h3>
                         <div className="space-y-2 md:space-y-3 lg:space-y-4">
                           <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex items-center justify-center flex-shrink-0 font-bold text-xs md:text-sm lg:text-base">4</div>
-                            <p className="text-gray-700 pt-1 md:pt-2 text-sm md:text-base">Lanzamiento</p>
+                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">4</div>
+                            <p className="text-gray-700 pt-2 mobile-text-small">Lanzamiento</p>
                           </div>
                           <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex items-center justify-center flex-shrink-0 font-bold text-xs md:text-sm lg:text-base">5</div>
-                            <p className="text-gray-700 pt-1 md:pt-2 text-sm md:text-base">Primera campaña</p>
+                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">5</div>
+                            <p className="text-gray-700 pt-2 mobile-text-small">Primera campaña</p>
                           </div>
                           <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 flex items-center justify-center flex-shrink-0 font-bold text-xs md:text-sm lg:text-base">6</div>
-                            <p className="text-gray-700 pt-1 md:pt-2 text-sm md:text-base">Primer reporte</p>
+                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">6</div>
+                            <p className="text-gray-700 pt-2 mobile-text-small">Primer reporte</p>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="bg-white/10 backdrop-blur border-2 md:border-4 border-white p-4 md:p-6 lg:p-8 rounded-lg text-center">
-                      <Eye className="w-12 h-12 md:w-14 md:h-14 lg:w-20 lg:h-20 mx-auto text-white mb-3 md:mb-4 lg:mb-6" />
-                      <p className="text-xl md:text-2xl lg:text-3xl text-white font-bold drop-shadow-lg">
+                      <Eye className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mx-auto text-white mb-3 md:mb-4 lg:mb-6" />
+                      <p className="mobile-text-medium text-white font-bold drop-shadow-lg">
                         "¿Comenzamos esta semana?"
                       </p>
                     </div>
@@ -530,39 +646,67 @@
                 {slides[currentSlide].component()}
               </div>
 
-              <div className="bg-gray-800 border-t border-gray-700 p-3 md:p-4">
-                <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-4">
+              {/* Barra de navegación mejorada */}
+              <div className="bg-gray-800/95 border-t border-gray-700 p-3 md:p-4">
+                <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 md:gap-4">
                   <button
                     onClick={prevSlide}
-                    className="p-2 md:p-3 rounded-full bg-amber-500 hover:bg-amber-600 text-white transition-colors flex-shrink-0"
+                    className="nav-button mobile-nav-button p-3 md:p-4 rounded-full bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white transition-all duration-200 flex-shrink-0"
+                    aria-label="Diapositiva anterior"
                   >
-                    <ChevronLeft className="w-4 h-4 md:w-6 md:h-6" />
+                    <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
                   </button>
 
-                  <div className="flex gap-1 md:gap-2 overflow-x-auto py-1 md:py-2 flex-1 justify-center">
+                  <div className="flex gap-1 md:gap-2 overflow-x-auto py-1 md:py-2 flex-1 justify-center mobile-scroll">
                     {slides.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => goToSlide(index)}
-                        className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all flex-shrink-0 ${
-                          currentSlide === index ? 'bg-amber-500 w-4 md:w-6 lg:w-8' : 'bg-gray-600 hover:bg-gray-500'
+                        className={`slide-indicator w-3 h-3 md:w-4 md:h-4 rounded-full transition-all flex-shrink-0 ${
+                          currentSlide === index ? 'bg-amber-500 w-6 md:w-8' : 'bg-gray-600 hover:bg-gray-500'
                         }`}
+                        aria-label={`Ir a diapositiva ${index + 1}`}
                       />
                     ))}
                   </div>
 
-                  <div className="text-white font-semibold flex-shrink-0 hidden sm:block text-sm md:text-base">
-                    {currentSlide + 1} / {slides.length}
+                  <div className="text-white font-semibold flex-shrink-0 text-sm md:text-base px-2">
+                    <span className="hidden sm:inline">Diapositiva </span>
+                    {currentSlide + 1} <span className="text-gray-400">/ {slides.length}</span>
                   </div>
 
                   <button
                     onClick={nextSlide}
-                    className="p-2 md:p-3 rounded-full bg-amber-500 hover:bg-amber-600 text-white transition-colors flex-shrink-0"
+                    className="nav-button mobile-nav-button p-3 md:p-4 rounded-full bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white transition-all duration-200 flex-shrink-0"
+                    aria-label="Siguiente diapositiva"
                   >
-                    <ChevronRight className="w-4 h-4 md:w-6 md:h-6" />
+                    <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
                   </button>
                 </div>
               </div>
+
+              {/* Botones de navegación flotantes para móviles (adicionales) */}
+              {isMobile && (
+                <>
+                  <button
+                    onClick={prevSlide}
+                    className="nav-button fixed left-2 top-1/2 transform -translate-y-1/2 z-50 p-4 rounded-full bg-amber-500/90 hover:bg-amber-600 text-white transition-all duration-200 shadow-2xl"
+                    aria-label="Diapositiva anterior"
+                    style={{backdropFilter: 'blur(4px)'}}
+                  >
+                    <ChevronLeft className="w-8 h-8" />
+                  </button>
+                  
+                  <button
+                    onClick={nextSlide}
+                    className="nav-button fixed right-2 top-1/2 transform -translate-y-1/2 z-50 p-4 rounded-full bg-amber-500/90 hover:bg-amber-600 text-white transition-all duration-200 shadow-2xl"
+                    aria-label="Siguiente diapositiva"
+                    style={{backdropFilter: 'blur(4px)'}}
+                  >
+                    <ChevronRight className="w-8 h-8" />
+                  </button>
+                </>
+              )}
             </div>
           );
         };
