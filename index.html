@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Propuesta Estratégica Óptica Leonesa 2026</title>
+    <title>Estrategia de Consolidación Digital - Óptica Leonesa 2026</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
@@ -74,6 +74,22 @@
             overscroll-behavior: contain;
         }
         
+        /* Animación para elementos de la presentación */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
         @media (max-width: 768px) {
             /* Asegurar que el contenido sea legible en móviles */
             .mobile-text-large {
@@ -88,6 +104,11 @@
             
             .mobile-text-small {
                 font-size: clamp(0.875rem, 2.5vw, 1.25rem);
+                line-height: 1.4;
+            }
+            
+            .mobile-text-xs {
+                font-size: clamp(0.75rem, 2vw, 1rem);
                 line-height: 1.4;
             }
             
@@ -159,6 +180,31 @@
             border-radius: 9999px;
             background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
             pointer-events: none;
+        }
+        
+        /* Estilos para tablas responsivas */
+        .responsive-table {
+            width: 100%;
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-cell {
+            min-width: 150px;
+            padding: 0.75rem;
+        }
+        
+        /* Efecto de gradiente animado */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-animated {
+            background-size: 200% 200%;
+            animation: gradientShift 5s ease infinite;
         }
     </style>
 </head>
@@ -260,6 +306,24 @@
             </svg>
         );
 
+        const Calendar = (props) => (
+            <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+        );
+
+        const Shield = (props) => (
+            <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+        );
+
+        const Home = (props) => (
+            <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+        );
+
         const OpticaPresentation = () => {
           const [currentSlide, setCurrentSlide] = useState(0);
           const containerRef = useRef(null);
@@ -316,19 +380,36 @@
             {
               id: 1,
               component: () => (
-                <div className="relative w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center overflow-hidden p-4 md:p-8 slide-container" ref={containerRef}>
+                <div className="relative w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 gradient-animated flex items-center justify-center overflow-hidden p-4 md:p-8 slide-container" ref={containerRef}>
                   <div className="absolute inset-0 bg-black opacity-30"></div>
-                  <div className="relative z-10 text-center px-4 md:px-6 max-w-5xl">
-                    <Eye className="w-20 h-20 md:w-24 md:h-24 mx-auto text-white mb-6 animate-pulse" />
+                  <div className="absolute top-4 right-4 md:top-8 md:right-8">
+                    <div className="bg-white/20 backdrop-blur rounded-full px-4 py-2">
+                      <p className="text-white font-bold text-sm md:text-lg">25 Años de Excelencia</p>
+                    </div>
+                  </div>
+                  <div className="relative z-10 text-center px-4 md:px-6 max-w-5xl fade-in-up">
+                    <div className="mb-6 md:mb-8">
+                      <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto">
+                        <div className="absolute inset-0 bg-white/30 rounded-full animate-ping"></div>
+                        <div className="relative bg-white/20 backdrop-blur rounded-full w-full h-full flex items-center justify-center">
+                          <Eye className="w-16 h-16 md:w-20 md:h-20 text-white" />
+                        </div>
+                      </div>
+                    </div>
                     <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-6 drop-shadow-2xl">
-                      PROPUESTA ESTRATÉGICA DE DOMINIO DIGITAL 2026
+                      ESTRATEGIA DE CONSOLIDACIÓN DIGITAL Y DOMINIO DE MERCADO 2026
                     </h1>
                     <h2 className="mobile-text-medium text-white mb-6 md:mb-8 font-light">
-                      Óptica Leonesa: El Renacimiento de una Tradición de 25 Años
+                      Óptica Leonesa: 25 Años de Excelencia en Puerto Vallarta
                     </h2>
-                    <p className="mobile-text-small text-white/90">
-                      Presentado por: José Manuel Testela
-                    </p>
+                    <div className="mt-8 md:mt-12">
+                      <p className="mobile-text-small text-white/90">
+                        Presentado por: [Tu Nombre] – Estratega Digital de Alcance Local
+                      </p>
+                      <p className="mobile-text-xs text-white/80 mt-2">
+                        Versión 2.0 - Presentación Completa
+                      </p>
+                    </div>
                   </div>
                 </div>
               )
@@ -337,28 +418,59 @@
               id: 2,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-5xl w-full">
-                    <h1 className="mobile-text-large font-bold text-white mb-4 text-center">
-                      La Realidad Actual: Oportunidad Invisible
-                    </h1>
-                    <p className="mobile-text-small text-gray-400 text-center mb-8 md:mb-12">Puntos Críticos Identificados</p>
+                  <div className="max-w-5xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-6 md:mb-8">
+                      <div className="bg-red-500 rounded-full p-3 md:p-4 mr-3">
+                        <Shield className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        El Diagnóstico: Estado de Situación Actual
+                      </h1>
+                    </div>
+                    
+                    <p className="mobile-text-small text-gray-400 text-center mb-8 md:mb-12 italic">"Un cuarto de siglo de prestigio merece una presencia digital que lo respalde"</p>
+                    
                     <div className="grid gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-12 mobile-grid-gap">
-                      <div className="bg-red-900/30 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
-                        <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Activos Digitales Desperdiciados</h3>
-                        <p className="text-gray-300 mobile-text-small">Google Maps sin control, sin presencia digital oficial</p>
+                      <div className="bg-red-900/40 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
+                        <div className="flex items-start">
+                          <div className="bg-red-600 rounded-full p-2 mr-3 mt-1 flex-shrink-0">
+                            <span className="text-white font-bold text-lg">1</span>
+                          </div>
+                          <div>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Ausencia de Activos Digitales Oficiales</h3>
+                            <p className="text-gray-300 mobile-text-small">Páginas web y perfiles sociales inexistentes o desactualizados</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="bg-red-900/30 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
-                        <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Conexión Perdida</h3>
-                        <p className="text-gray-300 mobile-text-small">Desconexión con público joven, trabajadores y ejecutivos</p>
+                      
+                      <div className="bg-red-900/40 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
+                        <div className="flex items-start">
+                          <div className="bg-red-600 rounded-full p-2 mr-3 mt-1 flex-shrink-0">
+                            <span className="text-white font-bold text-lg">2</span>
+                          </div>
+                          <div>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Vulnerabilidad en Google Maps</h3>
+                            <p className="text-gray-300 mobile-text-small">Falta de control legal sobre las 4 sedes, información desactualizada</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="bg-red-900/30 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
-                        <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Visibilidad Cero</h3>
-                        <p className="text-gray-300 mobile-text-small">25 años de prestigio invisible para quien busca en internet</p>
+                      
+                      <div className="bg-red-900/40 border-l-4 border-red-500 p-4 md:p-6 rounded-lg backdrop-blur">
+                        <div className="flex items-start">
+                          <div className="bg-red-600 rounded-full p-2 mr-3 mt-1 flex-shrink-0">
+                            <span className="text-white font-bold text-lg">3</span>
+                          </div>
+                          <div>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Fuga de Clientes Locales</h3>
+                            <p className="text-gray-300 mobile-text-small">Clientes migran hacia cadenas nacionales por falta de visibilidad online</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="bg-amber-500/20 border border-amber-500 p-4 md:p-6 rounded-lg text-center backdrop-blur">
+                    
+                    <div className="bg-amber-500/30 border-2 border-amber-500 p-4 md:p-6 rounded-lg text-center backdrop-blur">
                       <p className="mobile-text-medium text-amber-300 font-semibold">
-                        "Un legado de 25 años merece una vitrina digital que lo multiplique"
+                        "Sin presencia digital, incluso 25 años de prestigio son invisibles para quien busca en internet"
                       </p>
                     </div>
                   </div>
@@ -369,10 +481,14 @@
               id: 3,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-blue-900 to-blue-700 flex flex-col items-center justify-start p-4 md:p-8 lg:p-12 overflow-hidden slide-container" ref={containerRef}>
-                  <div className="w-full max-w-6xl flex-shrink-0">
-                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-6 text-center">
-                      Ecosistema Digital Óptica Leonesa
-                    </h1>
+                  <div className="w-full max-w-6xl flex-shrink-0 fade-in-up">
+                    <div className="flex items-center justify-center mb-4 md:mb-6">
+                      <Globe className="w-10 h-10 md:w-12 md:h-12 text-amber-400 mr-3" />
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Arquitectura Digital Óptica Leonesa
+                      </h1>
+                    </div>
+                    <p className="mobile-text-small text-blue-200 text-center mb-4 md:mb-6">Ecosistema Digital Propio y Controlado al 100%</p>
                   </div>
                   
                   <div className="flex-1 w-full flex items-center justify-center max-w-4xl mx-auto px-2">
@@ -393,44 +509,44 @@
                       </svg>
 
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-amber-500 rounded-full p-4 md:p-6 lg:p-10 shadow-2xl">
-                        <Globe className="w-10 h-10 md:w-12 md:h-12 lg:w-20 lg:h-20 text-white" />
+                        <Home className="w-10 h-10 md:w-12 md:h-12 lg:w-20 lg:h-20 text-white" />
                         <p className="text-white font-bold text-center mt-1 md:mt-2 text-xs md:text-sm lg:text-lg whitespace-nowrap">Sitio Web</p>
                       </div>
                       
                       <div className="absolute" style={{top: '12%', left: '15%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
                         <div className="bg-blue-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
-                          <Facebook className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                          <MapPin className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Comunidad</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Google Maps</p>
                       </div>
                       
                       <div className="absolute" style={{top: '12%', left: '85%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
-                        <div className="bg-pink-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
-                          <Instagram className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-blue-500 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
+                          <Facebook className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Confianza</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Facebook</p>
                       </div>
                       
                       <div className="absolute" style={{top: '88%', left: '15%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
-                        <div className="bg-green-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
-                          <MapPin className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                        <div className="bg-pink-600 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
+                          <Instagram className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Visibilidad</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Instagram</p>
                       </div>
                       
                       <div className="absolute" style={{top: '88%', left: '85%', transform: 'translate(-50%, -50%)', zIndex: 30}}>
                         <div className="bg-green-500 rounded-full p-3 md:p-4 lg:p-5 shadow-xl">
                           <MessageCircle className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
                         </div>
-                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">Conversión</p>
+                        <p className="text-white text-xs mt-1 md:mt-2 font-semibold text-center whitespace-nowrap">WhatsApp Business</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="w-full max-w-6xl mt-4 md:mt-6 flex-shrink-0 px-2">
+                  <div className="w-full max-w-6xl mt-4 md:mt-6 flex-shrink-0 px-2 fade-in-up">
                     <div className="bg-white/10 backdrop-blur border border-white/20 p-3 md:p-4 lg:p-6 rounded-lg text-center">
                       <p className="mobile-text-medium text-white font-semibold">
-                        "No construimos redes sociales, construimos propiedad digital permanente"
+                        "No construimos redes sociales, construimos propiedad digital permanente controlada al 100% por Óptica Leonesa"
                       </p>
                     </div>
                   </div>
@@ -441,39 +557,60 @@
               id: 4,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-green-900 to-green-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-5xl w-full">
-                    <h1 className="mobile-text-large font-bold text-white mb-4 text-center">
-                      Recuperación de Territorio Digital
-                    </h1>
-                    <p className="mobile-text-small text-green-200 text-center mb-8 md:mb-12">Fase 1 - Mes 1</p>
+                  <div className="max-w-5xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-6 md:mb-8">
+                      <div className="bg-green-500 rounded-full p-3 md:p-4 mr-3">
+                        <Home className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Sitio Web: Sucursal Virtual 24/7
+                      </h1>
+                    </div>
+                    
+                    <p className="mobile-text-small text-green-200 text-center mb-8 md:mb-12">Centro de Negocios y Citas Online</p>
+                    
                     <div className="grid gap-4 md:gap-6 mobile-stack">
                       <div className="bg-white/10 backdrop-blur border-l-4 border-amber-500 p-4 md:p-6 lg:p-8 rounded-lg">
                         <div className="flex items-start gap-3 md:gap-4">
-                          <CheckCircle className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 flex-shrink-0 mt-1" />
+                          <div className="bg-green-600 rounded-full p-3 flex-shrink-0">
+                            <span className="text-white font-bold text-lg">📍</span>
+                          </div>
                           <div>
-                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Rescate de 4 Sucursales en Google</h3>
-                            <p className="text-green-100 mobile-text-small">Recuperación completa de perfiles en Maps</p>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Localizador Automático Inteligente</h3>
+                            <p className="text-green-100 mobile-text-small">Guía a clientes a la sucursal más cercana en Puerto Vallarta según su ubicación</p>
                           </div>
                         </div>
                       </div>
+                      
                       <div className="bg-white/10 backdrop-blur border-l-4 border-amber-500 p-4 md:p-6 lg:p-8 rounded-lg">
                         <div className="flex items-start gap-3 md:gap-4">
-                          <CheckCircle className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 flex-shrink-0 mt-1" />
+                          <div className="bg-green-600 rounded-full p-3 flex-shrink-0">
+                            <span className="text-white font-bold text-lg">📅</span>
+                          </div>
                           <div>
-                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Sitio Web Oficial .mx</h3>
-                            <p className="text-green-100 mobile-text-small">Plataforma central con mapa interactivo y agendado</p>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Generación de Citas 24/7</h3>
+                            <p className="text-green-100 mobile-text-small">Sistema de agendamiento automático disponible las 24 horas del día, 7 días a la semana</p>
                           </div>
                         </div>
                       </div>
+                      
                       <div className="bg-white/10 backdrop-blur border-l-4 border-amber-500 p-4 md:p-6 lg:p-8 rounded-lg">
                         <div className="flex items-start gap-3 md:gap-4">
-                          <CheckCircle className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-amber-400 flex-shrink-0 mt-1" />
+                          <div className="bg-green-600 rounded-full p-3 flex-shrink-0">
+                            <span className="text-white font-bold text-lg">👓</span>
+                          </div>
                           <div>
-                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Identidad Digital Unificada</h3>
-                            <p className="text-green-100 mobile-text-small">Facebook e Instagram con paleta Dorado/Blanco</p>
+                            <h3 className="mobile-text-medium font-semibold text-white mb-2 md:mb-3">Catálogo Digital Segmentado</h3>
+                            <p className="text-green-100 mobile-text-small">Exhibición de soluciones para trabajadores, estudiantes, ejecutivos y familias</p>
                           </div>
                         </div>
                       </div>
+                    </div>
+                    
+                    <div className="mt-8 md:mt-12 bg-amber-500/20 border-2 border-amber-500 p-4 md:p-6 rounded-lg text-center">
+                      <p className="mobile-text-medium text-amber-300 font-semibold">
+                        "Una sucursal que nunca cierra, que atiende a toda Vallarta y genera citas automáticamente"
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -482,34 +619,54 @@
             {
               id: 5,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-purple-900 to-purple-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-5xl w-full py-4">
-                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-8 text-center">
-                      El Mensaje Correcto para Cada Audiencia
-                    </h1>
-                    <p className="mobile-text-medium text-purple-200 text-center mb-6 md:mb-12 font-semibold">Tres Pilares de Contenido</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mobile-grid-gap">
-                      <div className="bg-white/10 backdrop-blur border border-amber-500/50 p-4 md:p-6 rounded-lg text-center">
-                        <div className="bg-amber-500 rounded-full w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
-                          <TrendingUp className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
-                        </div>
-                        <h3 className="mobile-text-medium font-bold text-white mb-2 md:mb-3 lg:mb-4">Legado & Confianza</h3>
-                        <p className="text-purple-100 mobile-text-small">Historias de 25 años, testimonios generacionales</p>
+                <div className="w-full h-full bg-gradient-to-br from-indigo-900 to-indigo-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-5xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-6 md:mb-8">
+                      <div className="bg-indigo-500 rounded-full p-3 md:p-4 mr-3">
+                        <MapPin className="w-8 h-8 md:w-10 md:h-10 text-white" />
                       </div>
-                      <div className="bg-white/10 backdrop-blur border border-amber-500/50 p-4 md:p-6 rounded-lg text-center">
-                        <div className="bg-amber-500 rounded-full w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
-                          <Users className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Soberanía en el Mapa de Puerto Vallarta
+                      </h1>
+                    </div>
+                    
+                    <p className="mobile-text-small text-indigo-200 text-center mb-8 md:mb-12">Rescate y Control Total de Google Maps</p>
+                    
+                    <div className="grid md:grid-cols-2 gap-6 md:gap-8 mobile-grid-gap mb-8 md:mb-12">
+                      <div className="bg-white/10 backdrop-blur p-4 md:p-6 lg:p-8 rounded-lg">
+                        <div className="flex items-center mb-4">
+                          <div className="bg-amber-500 rounded-full p-3 mr-3">
+                            <Shield className="w-6 h-6 text-white" />
+                          </div>
+                          <h3 className="mobile-text-medium font-bold text-white">Reclamo Legal de Propiedad</h3>
                         </div>
-                        <h3 className="mobile-text-medium font-bold text-white mb-2 md:mb-3 lg:mb-4">Accesibilidad</h3>
-                        <p className="text-purple-100 mobile-text-small">Paquetes para estudiantes, trabajadores turísticos, familias</p>
+                        <p className="text-indigo-100 mobile-text-small">Recuperación legal de las 4 fichas comerciales ante Google</p>
                       </div>
-                      <div className="bg-white/10 backdrop-blur border border-amber-500/50 p-4 md:p-6 rounded-lg text-center">
-                        <div className="bg-amber-500 rounded-full w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mx-auto mb-3 md:mb-4 lg:mb-6">
-                          <Eye className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
+                      
+                      <div className="bg-white/10 backdrop-blur p-4 md:p-6 lg:p-8 rounded-lg">
+                        <div className="flex items-center mb-4">
+                          <div className="bg-amber-500 rounded-full p-3 mr-3">
+                            <CheckCircle className="w-6 h-6 text-white" />
+                          </div>
+                          <h3 className="mobile-text-medium font-bold text-white">Unificación Corporativa</h3>
                         </div>
-                        <h3 className="mobile-text-medium font-bold text-white mb-2 md:mb-3 lg:mb-4">Tecnología</h3>
-                        <p className="text-purple-100 mobile-text-small">Procesos de alta precisión, equipo de vanguardia</p>
+                        <p className="text-indigo-100 mobile-text-small">Horarios, teléfonos y fotos reales consistentes en todas las sucursales</p>
                       </div>
+                    </div>
+                    
+                    <div className="bg-blue-500/20 border-2 border-blue-400 p-4 md:p-6 rounded-lg">
+                      <h3 className="mobile-text-medium font-bold text-white mb-3 text-center">Impacto Directo</h3>
+                      <p className="text-blue-100 mobile-text-small text-center">
+                        Aparecer en los primeros resultados cuando alguien busque "Óptica en Puerto Vallarta", "Lentes cerca de mí" o "Examen de la vista Vallarta"
+                      </p>
+                    </div>
+                    
+                    <div className="mt-6 md:mt-8 grid grid-cols-4 gap-2 md:gap-4">
+                      {['📍 Centro', '📍 Marina', '📍 Pitillal', '📍 Zona Hotelera'].map((location, index) => (
+                        <div key={index} className="bg-white/10 backdrop-blur p-2 md:p-3 rounded-lg text-center">
+                          <p className="text-white font-bold text-xs md:text-sm">{location}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -518,27 +675,53 @@
             {
               id: 6,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-indigo-900 to-indigo-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-5xl w-full">
-                    <h1 className="mobile-text-large font-bold text-white mb-6 md:mb-8 text-center">
-                      Dominio Geográfico en Puerto Vallarta
-                    </h1>
-                    <div className="grid md:grid-cols-2 gap-6 md:gap-8 mobile-grid-gap">
-                      <div className="bg-white/10 backdrop-blur p-4 md:p-6 lg:p-8 rounded-lg">
-                        <Target className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-amber-400 mb-4 md:mb-6" />
-                        <h3 className="mobile-text-medium font-bold text-white mb-3 md:mb-4">Segmentación por Sucursal</h3>
-                        <p className="text-indigo-100 mb-3 md:mb-4 mobile-text-small">Impacto hiperlocal (5km radio)</p>
-                        <div className="space-y-2 md:space-y-3 text-indigo-100 mobile-text-small">
-                          <p><span className="font-bold text-amber-400">Centro:</span> Ejecutivos</p>
-                          <p><span className="font-bold text-amber-400">Marina:</span> Turismo premium</p>
-                          <p><span className="font-bold text-amber-400">Pitillal:</span> Familias</p>
+                <div className="w-full h-full bg-gradient-to-br from-purple-900 to-purple-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-5xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-6 md:mb-8">
+                      <div className="bg-purple-500 rounded-full p-3 md:p-4 mr-3">
+                        <Zap className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Aceleración mediante Inversión en Anuncios
+                      </h1>
+                    </div>
+                    
+                    <div className="bg-purple-800/40 border-2 border-purple-400 p-4 md:p-6 rounded-lg mb-6 md:mb-8">
+                      <h3 className="mobile-text-medium font-bold text-white mb-3 text-center">Modelo de Inversión Dual</h3>
+                    </div>
+                    
+                    <div className="grid gap-4 md:gap-6 mobile-stack mb-6 md:mb-8">
+                      <div className="bg-white/10 backdrop-blur p-4 md:p-6 rounded-lg">
+                        <div className="flex items-center mb-3">
+                          <div className="bg-amber-500 rounded-full p-2 mr-3">
+                            <TrendingUp className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className="mobile-text-medium font-bold text-white">Gestión Profesional</h3>
                         </div>
+                        <p className="text-purple-100 mobile-text-small">
+                          <span className="font-bold text-amber-400">INCLUIDO EN MIS HONORARIOS:</span> Estrategia, segmentación, optimización y reportes
+                        </p>
                       </div>
-                      <div className="bg-white/10 backdrop-blur p-4 md:p-6 lg:p-8 rounded-lg">
-                        <div className="text-4xl md:text-5xl lg:text-6xl mb-4 md:mb-6">📱</div>
-                        <h3 className="mobile-text-medium font-bold text-white mb-3 md:mb-4">Física + Digital</h3>
-                        <p className="text-indigo-100 mobile-text-small">QR en mostradores migra clientes al ecosistema digital</p>
+                      
+                      <div className="bg-white/10 backdrop-blur p-4 md:p-6 rounded-lg">
+                        <div className="flex items-center mb-3">
+                          <div className="bg-green-500 rounded-full p-2 mr-3">
+                            <DollarSign className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className="mobile-text-medium font-bold text-white">Capital de Inversión</h3>
+                        </div>
+                        <p className="text-purple-100 mobile-text-small">
+                          <span className="font-bold text-green-400">CUBIERTO POR LA EMPRESA:</span> Pago directo a plataformas (Meta, Google) según objetivos
+                        </p>
                       </div>
+                    </div>
+                    
+                    <div className="bg-amber-500/20 border-2 border-amber-500 p-4 md:p-6 rounded-lg">
+                      <h3 className="mobile-text-medium font-bold text-white mb-3 text-center">¿Por qué inyectar capital adicional?</h3>
+                      <p className="text-amber-200 mobile-text-small text-center">
+                        Para que el mensaje llegue a miles de personas nuevas en Vallarta, no solo a quienes ya nos conocen. 
+                        <span className="font-bold block mt-2">A mayor inversión, mayor flujo de personas a las 4 sucursales.</span>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -548,36 +731,56 @@
               id: 7,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-rose-900 to-rose-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-5xl w-full py-4">
-                    <h1 className="mobile-text-large font-bold text-white mb-4 md:mb-8 text-center">
-                      El Acelerador Comprobado
-                    </h1>
-                    <div className="bg-red-900/40 border-2 border-red-400 p-3 md:p-4 lg:p-6 rounded-lg mb-4 md:mb-6 lg:mb-8 text-center">
-                      <p className="mobile-text-medium text-red-200 font-bold">
-                        Sin inversión, solo 2% de seguidores ven su contenido
-                      </p>
+                  <div className="max-w-5xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-6 md:mb-8">
+                      <div className="bg-rose-500 rounded-full p-3 md:p-4 mr-3">
+                        <Calendar className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Cronograma Estratégico 2026
+                      </h1>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6 mb-4 md:mb-6 lg:mb-8 mobile-grid-gap">
-                      <div className="bg-white/10 backdrop-blur p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                        <Zap className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
-                        <h3 className="mobile-text-medium font-bold text-white mb-1 md:mb-2 lg:mb-3">Alcance Garantizado</h3>
-                        <p className="text-rose-100 mobile-text-small">Miles ven sus promociones</p>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                        <Target className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
-                        <h3 className="mobile-text-medium font-bold text-white mb-1 md:mb-2 lg:mb-3">Segmentación</h3>
-                        <p className="text-rose-100 mobile-text-small">Solo quien busca lentes</p>
-                      </div>
-                      <div className="bg-white/10 backdrop-blur p-3 md:p-4 lg:p-6 rounded-lg text-center">
-                        <DollarSign className="w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 text-amber-400 mx-auto mb-2 md:mb-3 lg:mb-4" />
-                        <h3 className="mobile-text-medium font-bold text-white mb-1 md:mb-2 lg:mb-3">ROI Medible</h3>
-                        <p className="text-rose-100 mobile-text-small">Citas agendadas</p>
-                      </div>
-                    </div>
-                    <div className="bg-amber-500/20 border-2 border-amber-500 p-3 md:p-4 lg:p-8 rounded-lg text-center">
-                      <p className="mobile-text-medium text-amber-300 font-bold">
-                        "Comprar una fila constante de clientes"
-                      </p>
+                    
+                    <p className="mobile-text-small text-rose-200 text-center mb-8 md:mb-12">Plan Cuatrimestral de Consolidación Digital</p>
+                    
+                    <div className="grid gap-4 md:gap-6 mobile-stack">
+                      {[
+                        {
+                          month: 'FEBRERO',
+                          title: 'Rescate y Lanzamiento',
+                          description: 'Rescate de activos, lanzamiento Web y campaña de "Renacimiento Digital"',
+                          color: 'from-amber-500 to-amber-600'
+                        },
+                        {
+                          month: 'MARZO',
+                          title: 'Salud Visual Bajo el Sol',
+                          description: 'Foco en Filtros UV/Luz Azul: "Protección bajo el sol de Vallarta"',
+                          color: 'from-orange-500 to-orange-600'
+                        },
+                        {
+                          month: 'ABRIL',
+                          title: 'Mes de la Familia y Prevención',
+                          description: 'Foco en niños, estudiantes y exámenes preventivos',
+                          color: 'from-blue-500 to-blue-600'
+                        },
+                        {
+                          month: 'MAYO',
+                          title: 'Especial 25 Aniversario',
+                          description: 'Máxima conversión y lealtad: Campaña "Bodas de Plata"',
+                          color: 'from-purple-500 to-purple-600'
+                        }
+                      ].map((item, index) => (
+                        <div key={index} className={`bg-gradient-to-r ${item.color} p-4 md:p-6 rounded-lg shadow-lg`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="mobile-text-medium font-bold text-white">{item.month}</h3>
+                            <div className="bg-white/20 backdrop-blur rounded-full px-3 py-1">
+                              <span className="text-white font-bold text-sm">MES {index + 1}</span>
+                            </div>
+                          </div>
+                          <h4 className="mobile-text-small font-bold text-white mb-2">{item.title}</h4>
+                          <p className="text-white/90 mobile-text-xs">{item.description}</p>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -586,53 +789,69 @@
             {
               id: 8,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-emerald-900 to-emerald-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-6xl w-full py-4">
-                    <h1 className="mobile-text-large font-bold text-white mb-6 md:mb-8 lg:mb-12 text-center">
-                      Inversión Clara, Resultados Tangibles
-                    </h1>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 mb-4 md:mb-6 lg:mb-8 mobile-grid-gap">
-                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <div className="text-center mb-3 md:mb-4 lg:mb-6">
-                          <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-600 mb-1 md:mb-2">$8,500</div>
-                          <div className="text-gray-600 mobile-text-small">MXN</div>
-                        </div>
-                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Inicial</h3>
-                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 mobile-text-small">
-                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600">✓</span><span>Rescate Maps</span></li>
-                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600">✓</span><span>Web</span></li>
-                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600">✓</span><span>Redes</span></li>
-                        </ul>
-                        <div className="mt-3 md:mt-4 lg:mt-6 text-center">
-                          <span className="bg-emerald-100 text-emerald-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">ÚNICO</span>
-                        </div>
+                <div className="w-full h-full bg-gradient-to-br from-amber-900 to-amber-800 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-6xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-4 md:mb-6">
+                      <div className="bg-amber-500 rounded-full p-3 md:p-4 mr-3">
+                        <span className="text-white font-bold text-xl">📅</span>
                       </div>
-                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <div className="text-center mb-3 md:mb-4 lg:mb-6">
-                          <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-amber-600 mb-1 md:mb-2">$6,500</div>
-                          <div className="text-gray-600 mobile-text-small">MXN/mes</div>
-                        </div>
-                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Gestión</h3>
-                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 mobile-text-small">
-                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600">✓</span><span>Contenido</span></li>
-                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600">✓</span><span>Optimización</span></li>
-                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600">✓</span><span>Reportes</span></li>
-                        </ul>
-                        <div className="mt-3 md:mt-4 lg:mt-6 text-center">
-                          <span className="bg-amber-100 text-amber-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">MENSUAL</span>
-                        </div>
-                      </div>
-                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <div className="text-center mb-3 md:mb-4 lg:mb-6">
-                          <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mb-1 md:mb-2">$4,000+</div>
-                          <div className="text-gray-600 mobile-text-small">MXN/mes</div>
-                        </div>
-                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">Publicidad</h3>
-                        <p className="text-gray-700 mb-3 md:mb-4 lg:mb-6 mobile-text-small">Variable según objetivos</p>
-                        <div className="mt-3 md:mt-4 lg:mt-6 text-center">
-                          <span className="bg-blue-100 text-blue-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">DIRECTO</span>
-                        </div>
-                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Plan de Contenidos - FEBRERO (Inauguración)
+                      </h1>
+                    </div>
+                    
+                    <div className="responsive-table bg-white/10 backdrop-blur rounded-lg overflow-hidden">
+                      <table className="w-full min-w-full">
+                        <thead>
+                          <tr className="bg-amber-600/50">
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Día</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Multimedia</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Mensaje Principal</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Copy Sugerido</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            {
+                              day: 'Lunes',
+                              media: 'Imagen Logo Dorado/Blanco',
+                              message: 'Lanzamiento Oficial',
+                              copy: '"25 años viendo por Vallarta, ahora más cerca de ti. Bienvenidos a nuestra nueva casa digital oficial."'
+                            },
+                            {
+                              day: 'Miércoles',
+                              media: 'Carrusel de las 4 Sedes',
+                              message: 'Omnipresencia',
+                              copy: '"Estamos donde tú estás. 📍 Descubre nuestra ubicación más cercana y agenda tu examen hoy mismo."'
+                            },
+                            {
+                              day: 'Viernes',
+                              media: 'Video Corto (Reel) Equipo',
+                              message: 'Confianza Humana',
+                              copy: '"La experiencia de 25 años en las manos de nuestros expertos. Conoce al equipo de Óptica Leonesa."'
+                            },
+                            {
+                              day: 'Lunes',
+                              media: 'Foto Tecnología Examen',
+                              message: 'Profesionalismo',
+                              copy: '"Precisión que se nota. Usamos tecnología de vanguardia para que tu graduación sea perfecta."'
+                            }
+                          ].map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}>
+                              <td className="table-cell mobile-text-xs font-bold text-amber-300 p-3">{row.day}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.media}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.message}</td>
+                              <td className="table-cell mobile-text-xs text-white italic p-3">"{row.copy}"</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div className="mt-4 md:mt-6 bg-amber-500/20 border-2 border-amber-500 p-3 md:p-4 rounded-lg">
+                      <p className="mobile-text-small text-amber-300 font-semibold text-center">
+                        "Contenido estratégico para posicionar el renacimiento digital desde el día uno"
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -641,52 +860,297 @@
             {
               id: 9,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-amber-600 via-amber-500 to-yellow-400 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
-                  <div className="max-w-5xl w-full py-4">
-                    <h1 className="mobile-text-large font-bold text-white mb-6 md:mb-8 lg:mb-12 text-center drop-shadow-lg">
-                      Plan de Acción Inmediato
-                    </h1>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-6 md:mb-8 lg:mb-12 mobile-grid-gap">
-                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-3 md:mb-4 lg:mb-6 text-center">Semanas 1-2</h3>
-                        <div className="space-y-2 md:space-y-3 lg:space-y-4">
-                          <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">1</div>
-                            <p className="text-gray-700 pt-2 mobile-text-small">Firma de acuerdo</p>
-                          </div>
-                          <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">2</div>
-                            <p className="text-gray-700 pt-2 mobile-text-small">Entrega de accesos</p>
-                          </div>
-                          <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">3</div>
-                            <p className="text-gray-700 pt-2 mobile-text-small">Sesión fotográfica</p>
-                          </div>
+                <div className="w-full h-full bg-gradient-to-br from-orange-900 to-orange-800 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-6xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-4 md:mb-6">
+                      <div className="bg-orange-500 rounded-full p-3 md:p-4 mr-3">
+                        <span className="text-white font-bold text-xl">☀️</span>
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Plan de Contenidos - MARZO (Salud y Sol)
+                      </h1>
+                    </div>
+                    
+                    <div className="responsive-table bg-white/10 backdrop-blur rounded-lg overflow-hidden">
+                      <table className="w-full min-w-full">
+                        <thead>
+                          <tr className="bg-orange-600/50">
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Día</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Multimedia</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Mensaje Principal</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Copy Sugerido</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            {
+                              day: 'Lunes',
+                              media: 'Video Reel (Efecto Sol)',
+                              message: 'Protección UV',
+                              copy: '"¿Sabías cómo afecta el sol de Vallarta a tu retina? Cuida tu vista con estilo y protección real."'
+                            },
+                            {
+                              day: 'Miércoles',
+                              media: 'Foto Lentes Ejecutivo',
+                              message: 'Filtro Luz Azul',
+                              copy: '"Para los que mueven a Vallarta frente a una pantalla. Reduce la fatiga visual con micas Blue-Free."'
+                            },
+                            {
+                              day: 'Viernes',
+                              media: 'Foto Estilo de Vida Playa',
+                              message: 'Estilo y Visión',
+                              copy: '"No sacrifiques tu estilo por tu salud. Descubre nuestra colección de temporada en las 4 sedes."'
+                            },
+                            {
+                              day: 'Lunes',
+                              media: 'Gráfico Informativo',
+                              message: 'Mantenimiento',
+                              copy: '"Tus lentes son tu herramienta diaria. Pasa por tu kit de limpieza de cortesía mencionando este post."'
+                            }
+                          ].map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}>
+                              <td className="table-cell mobile-text-xs font-bold text-orange-300 p-3">{row.day}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.media}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.message}</td>
+                              <td className="table-cell mobile-text-xs text-white italic p-3">"{row.copy}"</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div className="mt-4 md:mt-6 bg-orange-500/20 border-2 border-orange-500 p-3 md:p-4 rounded-lg">
+                      <p className="mobile-text-small text-orange-300 font-semibold text-center">
+                        "Capitalizando el sol de Vallarta para educar sobre protección visual premium"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 10,
+              component: () => (
+                <div className="w-full h-full bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-6xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-4 md:mb-6">
+                      <div className="bg-blue-500 rounded-full p-3 md:p-4 mr-3">
+                        <span className="text-white font-bold text-xl">👨‍👩‍👧‍👦</span>
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Plan de Contenidos - ABRIL (Familia/Niños)
+                      </h1>
+                    </div>
+                    
+                    <div className="responsive-table bg-white/10 backdrop-blur rounded-lg overflow-hidden">
+                      <table className="w-full min-w-full">
+                        <thead>
+                          <tr className="bg-blue-600/50">
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Día</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Multimedia</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Mensaje Principal</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Copy Sugerido</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            {
+                              day: 'Lunes',
+                              media: 'Foto Niño estudiando',
+                              message: 'Éxito Escolar',
+                              copy: '"Un buen desempeño escolar empieza con una buena visión. Exámenes preventivos para los reyes del hogar."'
+                            },
+                            {
+                              day: 'Miércoles',
+                              media: 'Carrusel Lentes Uso Rudo',
+                              message: 'Resistencia',
+                              copy: '"Diseñados para el juego, creados para durar. Conoce nuestra línea infantil de alta resistencia."'
+                            },
+                            {
+                              day: 'Viernes',
+                              media: 'Foto Familia Completa',
+                              message: 'Paquete Familiar',
+                              copy: '"La salud visual es un asunto de familia. Aprovecha nuestras promociones especiales este mes."'
+                            },
+                            {
+                              day: 'Lunes',
+                              media: 'Video Reel Tips',
+                              message: 'Prevención',
+                              copy: '"3 señales de que tu hijo necesita lentes. No esperes a que afecte sus calificaciones."'
+                            }
+                          ].map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}>
+                              <td className="table-cell mobile-text-xs font-bold text-blue-300 p-3">{row.day}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.media}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.message}</td>
+                              <td className="table-cell mobile-text-xs text-white italic p-3">"{row.copy}"</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div className="mt-4 md:mt-6 bg-blue-500/20 border-2 border-blue-500 p-3 md:p-4 rounded-lg">
+                      <p className="mobile-text-small text-blue-300 font-semibold text-center">
+                        "Enfocado en la salud visual de las familias vallartenses y el futuro de los niños"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 11,
+              component: () => (
+                <div className="w-full h-full bg-gradient-to-br from-purple-900 to-purple-800 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-6xl w-full fade-in-up">
+                    <div className="flex items-center justify-center mb-4 md:mb-6">
+                      <div className="bg-purple-500 rounded-full p-3 md:p-4 mr-3">
+                        <span className="text-white font-bold text-xl">🎉</span>
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Plan de Contenidos - MAYO (Aniversario)
+                      </h1>
+                    </div>
+                    
+                    <div className="responsive-table bg-white/10 backdrop-blur rounded-lg overflow-hidden">
+                      <table className="w-full min-w-full">
+                        <thead>
+                          <tr className="bg-purple-600/50">
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Día</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Multimedia</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Mensaje Principal</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white p-3">Copy Sugerido</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            {
+                              day: 'Lunes',
+                              media: 'Video Storytelling',
+                              message: '25 Años de Historia',
+                              copy: '"De una pequeña oficina a 4 sucursales en Vallarta. Gracias por permitirnos ver crecer a esta ciudad."'
+                            },
+                            {
+                              day: 'Miércoles',
+                              media: 'Foto Lente Premium',
+                              message: 'Edición Aniversario',
+                              copy: '"Bodas de Plata: 25 años aclarando miradas con la mejor selección de armazones de la región."'
+                            },
+                            {
+                              day: 'Viernes',
+                              media: 'Gráfico Promoción',
+                              message: 'Regalo de Lealtad',
+                              copy: '"Nuestra fiesta es tuya. Celebramos 25 años con beneficios exclusivos en tu graduación completa."'
+                            },
+                            {
+                              day: 'Lunes',
+                              media: 'Video Invitación',
+                              message: 'Cierre de Mes',
+                              copy: '"Gracias Puerto Vallarta. Sigamos viendo el futuro juntos. Agenda tu cita de aniversario hoy."'
+                            }
+                          ].map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}>
+                              <td className="table-cell mobile-text-xs font-bold text-purple-300 p-3">{row.day}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.media}</td>
+                              <td className="table-cell mobile-text-xs text-white p-3">{row.message}</td>
+                              <td className="table-cell mobile-text-xs text-white italic p-3">"{row.copy}"</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div className="mt-4 md:mt-6 bg-purple-500/20 border-2 border-purple-500 p-3 md:p-4 rounded-lg">
+                      <p className="mobile-text-small text-purple-300 font-semibold text-center">
+                        "Celebrando 25 años de visión con contenido emocional y promociones exclusivas"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 12,
+              component: () => (
+                <div className="w-full h-full bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700 flex items-center justify-center mobile-padding slide-container mobile-scroll" ref={containerRef}>
+                  <div className="max-w-5xl w-full fade-in-up">
+                    <div className="text-center mb-6 md:mb-8">
+                      <div className="inline-block bg-emerald-600 rounded-full p-3 md:p-4 mb-4">
+                        <DollarSign className="w-10 h-10 md:w-12 md:h-12 text-white" />
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white mb-4">
+                        Inversión Clara, Resultados Tangibles
+                      </h1>
+                      <p className="mobile-text-small text-emerald-200">
+                        Transparencia Total en la Estrategia Digital 2026
+                      </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 mobile-grid-gap">
+                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <div className="text-center mb-3 md:mb-4 lg:mb-6">
+                          <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-emerald-600 mb-1 md:mb-2">$8,500</div>
+                          <div className="text-gray-600 mobile-text-small font-bold">MXN - ÚNICO</div>
+                        </div>
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">IMPLEMENTACIÓN (MES 1)</h3>
+                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 mobile-text-small">
+                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600 font-bold">✓</span><span>Sitio Web Oficial .mx</span></li>
+                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600 font-bold">✓</span><span>Rescate de Google Maps (4 sedes)</span></li>
+                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600 font-bold">✓</span><span>Identidad Digital Aniversario</span></li>
+                          <li className="flex gap-1 md:gap-2"><span className="text-emerald-600 font-bold">✓</span><span>Configuración Inicial</span></li>
+                        </ul>
+                        <div className="mt-3 md:mt-4 lg:mt-6 text-center">
+                          <span className="bg-emerald-100 text-emerald-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">INVERSIÓN INICIAL</span>
                         </div>
                       </div>
-                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl">
-                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-3 md:mb-4 lg:mb-6 text-center">Semanas 3-4</h3>
-                        <div className="space-y-2 md:space-y-3 lg:space-y-4">
-                          <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">4</div>
-                            <p className="text-gray-700 pt-2 mobile-text-small">Lanzamiento</p>
-                          </div>
-                          <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">5</div>
-                            <p className="text-gray-700 pt-2 mobile-text-small">Primera campaña</p>
-                          </div>
-                          <div className="flex gap-2 md:gap-3 lg:gap-4">
-                            <div className="bg-amber-500 text-white rounded-full w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center flex-shrink-0 font-bold text-sm md:text-base">6</div>
-                            <p className="text-gray-700 pt-2 mobile-text-small">Primer reporte</p>
-                          </div>
+                      
+                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <div className="text-center mb-3 md:mb-4 lg:mb-6">
+                          <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-amber-600 mb-1 md:mb-2">$6,500</div>
+                          <div className="text-gray-600 mobile-text-small font-bold">MXN / MES</div>
+                        </div>
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">GESTIÓN MENSUAL</h3>
+                        <ul className="space-y-1 md:space-y-2 lg:space-y-3 text-gray-700 mobile-text-small">
+                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600 font-bold">✓</span><span>Estrategia de Contenidos</span></li>
+                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600 font-bold">✓</span><span>Administración de Ads</span></li>
+                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600 font-bold">✓</span><span>Optimización Constante</span></li>
+                          <li className="flex gap-1 md:gap-2"><span className="text-amber-600 font-bold">✓</span><span>Reportes Semanales/Mensuales</span></li>
+                        </ul>
+                        <div className="mt-3 md:mt-4 lg:mt-6 text-center">
+                          <span className="bg-amber-100 text-amber-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">SERVICIO CONTINUO</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white rounded-lg p-4 md:p-6 lg:p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                        <div className="text-center mb-3 md:mb-4 lg:mb-6">
+                          <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mb-1 md:mb-2">$4,000+</div>
+                          <div className="text-gray-600 mobile-text-small font-bold">MXN / MES</div>
+                        </div>
+                        <h3 className="mobile-text-medium font-bold text-gray-800 mb-2 md:mb-3 lg:mb-4 text-center">CAPITAL PUBLICITARIO</h3>
+                        <p className="text-gray-700 mb-3 md:mb-4 lg:mb-6 mobile-text-small text-center">
+                          Variable según objetivos de alcance y conversión
+                        </p>
+                        <div className="text-center">
+                          <p className="text-gray-600 mobile-text-xs mb-2">Pago directo a plataformas</p>
+                          <span className="bg-blue-100 text-blue-800 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-semibold">INVERSIÓN DIRECTA</span>
                         </div>
                       </div>
                     </div>
-                    <div className="bg-white/10 backdrop-blur border-2 md:border-4 border-white p-4 md:p-6 lg:p-8 rounded-lg text-center">
-                      <Eye className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mx-auto text-white mb-3 md:mb-4 lg:mb-6" />
-                      <p className="mobile-text-medium text-white font-bold drop-shadow-lg">
-                        "¿Comenzamos esta semana?"
+                    
+                    <div className="bg-gradient-to-r from-amber-600 to-amber-500 border-4 border-white p-4 md:p-6 lg:p-8 rounded-lg text-center shadow-2xl">
+                      <Eye className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mx-auto text-white mb-4 md:mb-6 animate-pulse" />
+                      <p className="mobile-text-medium text-white font-bold drop-shadow-lg mb-3">
+                        "25 años nos respaldan; el futuro digital nos espera."
                       </p>
+                      <p className="mobile-text-large text-white font-extrabold drop-shadow-lg">
+                        ¿EMPEZAMOS HOY?
+                      </p>
+                      <div className="mt-4 md:mt-6">
+                        <p className="mobile-text-small text-white/90">
+                          Contacto: [Tu número/email] - Disponibilidad inmediata
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
