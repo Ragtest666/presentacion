@@ -751,11 +751,19 @@
                       </h1>
                     </div>
                     
+                    <p className="mobile-text-small text-rose-200 text-center mb-4 md:mb-6">Plan Quincenal de Consolidación Digital</p>
+                    
                     <div className="grid gap-3 md:gap-4 mobile-stack">
                       {[
                         {
+                          month: 'ENERO',
+                          title: 'Implementación Inicial',
+                          description: 'Rescate de activos y lanzamiento',
+                          color: 'from-blue-500 to-blue-600'
+                        },
+                        {
                           month: 'FEBRERO',
-                          title: 'Rescate y Lanzamiento',
+                          title: 'Consolidación Digital',
                           description: 'Renacimiento Digital',
                           color: 'from-amber-500 to-amber-600'
                         },
@@ -769,7 +777,7 @@
                           month: 'ABRIL',
                           title: 'Familia y Prevención',
                           description: 'Niños y estudiantes',
-                          color: 'from-blue-500 to-blue-600'
+                          color: 'from-green-500 to-green-600'
                         },
                         {
                           month: 'MAYO',
@@ -797,6 +805,77 @@
             {
               id: 8,
               component: () => (
+                <div className="w-full h-full bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
+                  <div className="w-full max-w-5xl">
+                    <div className="flex items-center justify-center mb-3 md:mb-4">
+                      <div className="bg-blue-500 rounded-full p-2 md:p-3 mr-2">
+                        <span className="text-white font-bold text-lg">🚀</span>
+                      </div>
+                      <h1 className="mobile-text-large font-bold text-white text-center">
+                        Contenidos - ENERO (Implementación)
+                      </h1>
+                    </div>
+                    
+                    <div className="table-wrapper">
+                      <table className="responsive-table">
+                        <thead>
+                          <tr className="bg-blue-600/50">
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white">Día</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white">Multimedia</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white">Mensaje</th>
+                            <th className="table-cell text-left mobile-text-xs font-bold text-white">Copy</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            {
+                              day: 'Lunes',
+                              media: 'Galería Proceso de Excelencia',
+                              message: 'Proceso de Transformación',
+                              copy: '"Detrás de cada visión clara, hay un proceso de excelencia. Comenzamos nuestra transformación digital."'
+                            },
+                            {
+                              day: 'Miércoles',
+                              media: 'Foto Proceso Artesanal',
+                              message: 'Tradición y Tecnología',
+                              copy: '"25 años combinando el cuidado artesanal con la última tecnología. Conoce nuestro proceso."'
+                            },
+                            {
+                              day: 'Viernes',
+                              media: 'Carousel de Tecnología',
+                              message: 'Inversión en Innovación',
+                              copy: '"Invertimos en lo mejor para que tú veas mejor. Equipos de última generación en Óptica Leonesa."'
+                            },
+                            {
+                              day: 'Lunes',
+                              media: 'Infografía Equipo Especializado',
+                              message: 'Experiencia Certificada',
+                              copy: '"Nuestro equipo tiene más de 100 años de experiencia combinada. Te atendemos con pasión y profesionalismo."'
+                            }
+                          ].map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}>
+                              <td className="table-cell mobile-text-xs font-bold text-blue-300">{row.day}</td>
+                              <td className="table-cell mobile-text-xs text-white">{row.media}</td>
+                              <td className="table-cell mobile-text-xs text-white">{row.message}</td>
+                              <td className="table-cell mobile-text-xs text-white italic">"{row.copy}"</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div className="mt-3 md:mt-4 bg-blue-500/20 border border-blue-500 p-2 md:p-3 rounded-lg">
+                      <p className="mobile-text-small text-blue-300 font-semibold text-center">
+                        "Contenido preparatorio para el gran lanzamiento de febrero"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              id: 9,
+              component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-amber-900 to-amber-800 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
                   <div className="w-full max-w-5xl">
                     <div className="flex items-center justify-center mb-3 md:mb-4">
@@ -822,7 +901,7 @@
                           {[
                             {
                               day: 'Lunes',
-                              media: 'Logo Dorado',
+                              media: 'Logo Dorado Animado',
                               message: 'Lanzamiento',
                               copy: '"25 años viendo por Vallarta, ahora más cerca de ti."'
                             },
@@ -834,13 +913,13 @@
                             },
                             {
                               day: 'Viernes',
-                              media: 'Video Equipo',
+                              media: 'Montaje Experiencia Cliente',
                               message: 'Confianza',
                               copy: '"25 años de experiencia en manos de nuestros expertos."'
                             },
                             {
                               day: 'Lunes',
-                              media: 'Foto Tecnología',
+                              media: 'Foto Tecnología Avanzada',
                               message: 'Profesionalismo',
                               copy: '"Precisión que se nota. Tecnología de vanguardia."'
                             }
@@ -860,7 +939,7 @@
               )
             },
             {
-              id: 9,
+              id: 10,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-orange-900 to-orange-800 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
                   <div className="w-full max-w-5xl">
@@ -887,25 +966,25 @@
                           {[
                             {
                               day: 'Lunes',
-                              media: 'Video Efecto Sol',
+                              media: 'Animación Efecto Sol',
                               message: 'Protección UV',
                               copy: '"¿Cómo afecta el sol de Vallarta a tu retina? Cuida tu vista."'
                             },
                             {
                               day: 'Miércoles',
-                              media: 'Foto Lentes',
+                              media: 'Foto Lentes Especializados',
                               message: 'Filtro Luz Azul',
                               copy: '"Para los que trabajan frente a pantalla. Reduce fatiga visual."'
                             },
                             {
                               day: 'Viernes',
-                              media: 'Foto Playa',
+                              media: 'Foto Playa con Modelo',
                               message: 'Estilo y Visión',
                               copy: '"No sacrifiques estilo por salud. Colección de temporada."'
                             },
                             {
                               day: 'Lunes',
-                              media: 'Gráfico',
+                              media: 'Gráfico Informativo',
                               message: 'Mantenimiento',
                               copy: '"Tus lentes son tu herramienta. Kit de limpieza cortesía."'
                             }
@@ -925,12 +1004,12 @@
               )
             },
             {
-              id: 10,
+              id: 11,
               component: () => (
-                <div className="w-full h-full bg-gradient-to-br from-blue-900 to-blue-800 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
+                <div className="w-full h-full bg-gradient-to-br from-green-900 to-green-800 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
                   <div className="w-full max-w-5xl">
                     <div className="flex items-center justify-center mb-3 md:mb-4">
-                      <div className="bg-blue-500 rounded-full p-2 md:p-3 mr-2">
+                      <div className="bg-green-500 rounded-full p-2 md:p-3 mr-2">
                         <span className="text-white font-bold text-lg">👨‍👩‍👧‍👦</span>
                       </div>
                       <h1 className="mobile-text-large font-bold text-white text-center">
@@ -941,7 +1020,7 @@
                     <div className="table-wrapper">
                       <table className="responsive-table">
                         <thead>
-                          <tr className="bg-blue-600/50">
+                          <tr className="bg-green-600/50">
                             <th className="table-cell text-left mobile-text-xs font-bold text-white">Día</th>
                             <th className="table-cell text-left mobile-text-xs font-bold text-white">Multimedia</th>
                             <th className="table-cell text-left mobile-text-xs font-bold text-white">Mensaje</th>
@@ -952,31 +1031,31 @@
                           {[
                             {
                               day: 'Lunes',
-                              media: 'Foto Niño',
+                              media: 'Foto Niño Feliz',
                               message: 'Éxito Escolar',
                               copy: '"Buen desempeño escolar empieza con buena visión. Exámenes preventivos."'
                             },
                             {
                               day: 'Miércoles',
-                              media: 'Carrusel Lentes',
+                              media: 'Carrusel Lentes Infantiles',
                               message: 'Resistencia',
                               copy: '"Diseñados para el juego, creados para durar. Línea infantil."'
                             },
                             {
                               day: 'Viernes',
-                              media: 'Foto Familia',
+                              media: 'Foto Familia Contentos',
                               message: 'Paquete Familiar',
                               copy: '"Salud visual es asunto de familia. Promociones especiales."'
                             },
                             {
                               day: 'Lunes',
-                              media: 'Video Tips',
+                              media: 'Infografía Tips',
                               message: 'Prevención',
                               copy: '"3 señales de que tu hijo necesita lentes. No esperes."'
                             }
                           ].map((row, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-white/5' : 'bg-white/10'}>
-                              <td className="table-cell mobile-text-xs font-bold text-blue-300">{row.day}</td>
+                              <td className="table-cell mobile-text-xs font-bold text-green-300">{row.day}</td>
                               <td className="table-cell mobile-text-xs text-white">{row.media}</td>
                               <td className="table-cell mobile-text-xs text-white">{row.message}</td>
                               <td className="table-cell mobile-text-xs text-white italic">"{row.copy}"</td>
@@ -990,7 +1069,7 @@
               )
             },
             {
-              id: 11,
+              id: 12,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-purple-900 to-purple-800 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
                   <div className="w-full max-w-5xl">
@@ -1017,25 +1096,25 @@
                           {[
                             {
                               day: 'Lunes',
-                              media: 'Video Historia',
+                              media: 'Línea de Tiempo Animada',
                               message: '25 Años',
                               copy: '"De una oficina a 4 sucursales. Gracias por ver crecer Vallarta."'
                             },
                             {
                               day: 'Miércoles',
-                              media: 'Foto Premium',
-                              message: 'Edición Aniversario',
-                              copy: '"Bodas de Plata: 25 años aclarando miradas."'
+                              media: 'Foto Colección Premium',
+                              message: 'Lujo y estilo',
+                              copy: '"Estilo en la mirada. Al alcance de ti."'
                             },
                             {
                               day: 'Viernes',
-                              media: 'Gráfico Promo',
+                              media: 'Gráfico Promociones Especiales',
                               message: 'Lealtad',
                               copy: '"Nuestra fiesta es tuya. Beneficios exclusivos aniversario."'
                             },
                             {
                               day: 'Lunes',
-                              media: 'Video Invitación',
+                              media: 'Collage de Agradecimiento',
                               message: 'Cierre',
                               copy: '"Gracias Puerto Vallarta. Sigamos viendo el futuro juntos."'
                             }
@@ -1055,7 +1134,7 @@
               )
             },
             {
-              id: 12,
+              id: 13,
               component: () => (
                 <div className="w-full h-full bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700 flex items-center justify-center mobile-padding slide-container mobile-scroll mobile-compact" ref={containerRef}>
                   <div className="max-w-4xl w-full">
@@ -1097,7 +1176,7 @@
                       
                       <div className="bg-white rounded-lg p-3 md:p-4 shadow-xl">
                         <div className="text-center mb-2">
-                          <div className="text-2xl md:text-3xl font-bold text-blue-600">$4,000+</div>
+                          <div className="text-2xl md:text-3xl font-bold text-blue-600">Desde $500</div>
                           <div className="text-gray-600 mobile-text-xs font-bold">MXN / MES</div>
                         </div>
                         <h3 className="mobile-text-small font-bold text-gray-800 mb-1 text-center">PUBLICIDAD</h3>
